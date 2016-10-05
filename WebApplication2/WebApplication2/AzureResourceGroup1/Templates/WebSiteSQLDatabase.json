@@ -1,0 +1,139 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "publicIPAddresses_GWIP_name": {
+      "defaultValue": "GWIP",
+      "type": "String"
+    },
+    "virtualNetworks_VNet1_name": {
+      "defaultValue": "VNet1",
+      "type": "String"
+    },
+    "serverfarms_ServicePlanbf1658ac_a64a_name": {
+      "defaultValue": "ServicePlanbf1658ac-a64a",
+      "type": "String"
+    },
+    "sites_testapppoc_name": {
+      "defaultValue": "testapppoc",
+      "type": "String"
+    }
+  },
+  "variables": { },
+  "resources": [
+    {
+      "comments": "Generalized from resource: '/subscriptions/56416ab2-d723-4e56-aeda-1fde74700dde/resourceGroups/RgAutoTest/providers/Microsoft.Network/publicIPAddresses/GWIP'.",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[parameters('publicIPAddresses_GWIP_name')]",
+      "apiVersion": "2016-03-30",
+      "location": "southeastasia",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "idleTimeoutInMinutes": 4
+      },
+      "resources": [ ],
+      "dependsOn": [ ]
+    },
+    {
+      "comments": "Generalized from resource: '/subscriptions/56416ab2-d723-4e56-aeda-1fde74700dde/resourceGroups/RgAutoTest/providers/Microsoft.Network/virtualNetworks/VNet1'.",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('virtualNetworks_VNet1_name')]",
+      "apiVersion": "2016-03-30",
+      "location": "southeastasia",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "192.168.0.0/16",
+            "10.254.0.0/16"
+          ]
+        },
+        "dhcpOptions": {
+          "dnsServers": [
+            "8.8.8.8"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "FrontEnd",
+            "properties": {
+              "addressPrefix": "192.168.1.0/24"
+            }
+          },
+          {
+            "name": "Backend",
+            "properties": {
+              "addressPrefix": "10.254.1.0/24"
+            }
+          },
+          {
+            "name": "GatewaySubnet",
+            "properties": {
+              "addressPrefix": "192.168.200.0/26"
+            }
+          }
+        ]
+      },
+      "resources": [ ],
+      "dependsOn": [ ]
+    },
+    {
+      "comments": "Generalized from resource: '/subscriptions/56416ab2-d723-4e56-aeda-1fde74700dde/resourceGroups/RgAutoTest/providers/Microsoft.Web/serverfarms/ServicePlanbf1658ac-a64a'.",
+      "type": "Microsoft.Web/serverfarms",
+      "sku": {
+        "name": "S1",
+        "tier": "Standard",
+        "size": "S1",
+        "family": "S",
+        "capacity": 1
+      },
+      "name": "[parameters('serverfarms_ServicePlanbf1658ac_a64a_name')]",
+      "apiVersion": "2015-08-01",
+      "location": "South Central US",
+      "properties": {
+        "name": "[parameters('serverfarms_ServicePlanbf1658ac_a64a_name')]",
+        "numberOfWorkers": 1
+      },
+      "resources": [ ],
+      "dependsOn": [ ]
+    },
+    {
+      "comments": "Generalized from resource: '/subscriptions/56416ab2-d723-4e56-aeda-1fde74700dde/resourceGroups/RgAutoTest/providers/Microsoft.Web/sites/testapppoc'.",
+      "type": "Microsoft.Web/sites",
+      "name": "[parameters('sites_testapppoc_name')]",
+      "apiVersion": "2015-08-01",
+      "location": "South Central US",
+      "tags": {
+        "hidden-related:/subscriptions/56416ab2-d723-4e56-aeda-1fde74700dde/resourcegroups/RgAutoTest/providers/Microsoft.Web/serverfarms/ServicePlanbf1658ac-a64a": "empty"
+      },
+      "properties": {
+        "name": "[parameters('sites_testapppoc_name')]",
+        "hostNames": [
+          "testapppoc.azurewebsites.net"
+        ],
+        "enabledHostNames": [
+          "testapppoc.azurewebsites.net",
+          "testapppoc.scm.azurewebsites.net"
+        ],
+        "hostNameSslStates": [
+          {
+            "name": "[concat(parameters('sites_testapppoc_name'),'.azurewebsites.net')]",
+            "sslState": 0,
+            "thumbprint": null,
+            "ipBasedSslState": 0
+          },
+          {
+            "name": "[concat(parameters('sites_testapppoc_name'),'.scm.azurewebsites.net')]",
+            "sslState": 0,
+            "thumbprint": null,
+            "ipBasedSslState": 0
+          }
+        ],
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_ServicePlanbf1658ac_a64a_name'))]"
+      },
+      "resources": [ ],
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_ServicePlanbf1658ac_a64a_name'))]"
+      ]
+    }
+  ]
+}
